@@ -24,5 +24,17 @@ namespace CodeAPI.Repositories.Implementation
         {
             return await dbContext.Categories.ToListAsync();
         }
+
+        public async Task<Category?> UpdateAsync(Category category)
+        {
+           var selectedCategory = await dbContext.Categories.FirstOrDefaultAsync(x => x.Id == category.Id);
+            if (selectedCategory != null)
+            {
+                dbContext.Entry(selectedCategory).CurrentValues.SetValues(category);
+                await dbContext.SaveChangesAsync();
+                return category ?? new Category();
+            }
+            return null;
+        }
     }
 }

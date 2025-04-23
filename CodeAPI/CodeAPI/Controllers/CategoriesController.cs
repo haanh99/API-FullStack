@@ -77,5 +77,34 @@ namespace CodeAPI.Controllers
             };
             return Ok(response);
         }
+        // update category by Id
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
+        {
+            //convert Dto to domain model
+            var category = new Category
+            {
+                Id = id,
+                Name = request.Name,
+                UrlHandle = request.UrlHandle,
+            };
+            await _categoryRepository.UpdateAsync(category);
+
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            //convert domain Model to Dto
+            var response = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle,
+            };
+            return Ok(response);
+        }
+
     }
 }
