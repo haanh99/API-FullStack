@@ -36,5 +36,19 @@ namespace CodeAPI.Repositories.Implementation
             }
             return null;
         }
+
+        public async Task<Category?> DeleteCategory(Guid id)
+        {
+            var selectedCategory = await dbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            if (selectedCategory != null)
+            {
+                dbContext.Categories.Remove(selectedCategory);
+                await dbContext.SaveChangesAsync();
+                return selectedCategory;
+            }
+            return null;
+        }
+
+     
     }
 }
