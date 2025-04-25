@@ -107,22 +107,25 @@ namespace CodeAPI.Controllers
         }
         // Delete category
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory([FromBody] Guid id)
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {
             var category = await _categoryRepository.DeleteCategory(id);
 
             if (category == null)
             {
+                return NotFound();
 
-            return NotFound(); 
-            }
+            }   
             //convert  Domain to DTO
-            var response = new CategoryDto { 
+            var response = new CategoryDto
+            {
                 Id = category.Id,
                 Name = category.Name,
-                UrlHandle= category.UrlHandle
+                UrlHandle = category.UrlHandle
             };
             return Ok(response);
+
         }
         
     }
