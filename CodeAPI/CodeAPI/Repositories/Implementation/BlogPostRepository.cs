@@ -1,6 +1,7 @@
 ﻿using CodeAPI.Data;
 using CodeAPI.Models.Domain;
 using CodeAPI.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace CodeAPI.Repositories.Implementation
 {
@@ -16,6 +17,11 @@ namespace CodeAPI.Repositories.Implementation
             await _context.BlogPots.AddAsync(blogPost);
             await _context.SaveChangesAsync();
             return blogPost;
+        }
+
+        public async Task<IEnumerable<BlogPost>> GettAllAsync()
+        {
+            return await _context.BlogPots.ToListAsync();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace CodeAPI.Controllers
                 UrlHandle = request.UrlHandle,
                 PublishedDate = request.PublishedDate,
                 Author = request.Author,
-                IsPublished = request.IsPublished,
+                IsPublished = request.IsVisible,
             };
             await _blogPostRepository.CreateAsync(blogPost);
 
@@ -43,9 +43,32 @@ namespace CodeAPI.Controllers
                 UrlHandle = blogPost.UrlHandle,
                 PublishedDate = blogPost.PublishedDate,
                 Author = blogPost.Author,
-                IsPublished = blogPost.IsPublished,
+                IsVisible = blogPost.IsPublished,
             };
             return Ok();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllBlogPost()
+        {
+            var blogPosts = await _blogPostRepository.GettAllAsync();
+
+            //Convert domain model to DTO
+            var response = new List<BlogPostDto>();
+            foreach (var blogPost in blogPosts)
+            {
+                response.Add(new BlogPostDto
+                {
+                    Id = blogPost.Id,
+                    Title = blogPost.Title,
+                    Content = blogPost.Content,
+                    FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                    UrlHandle = blogPost.UrlHandle,
+                    PublishedDate = blogPost.PublishedDate,
+                    Author = blogPost.Author,
+                    IsVisible = blogPost.IsPublished,
+                });
+            }
+            return Ok(response);
         }
     }
 }
