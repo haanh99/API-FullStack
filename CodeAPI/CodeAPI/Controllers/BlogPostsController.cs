@@ -12,9 +12,12 @@ namespace CodeAPI.Controllers
     public class BlogPostsController : ControllerBase
     {
         private readonly IBlogPostRepository _blogPostRepository;
-        public BlogPostsController(IBlogPostRepository blogPostRepository)
+        private readonly ICategoryRepository _categoryRepository;
+
+        public BlogPostsController(IBlogPostRepository blogPostRepository, ICategoryRepository categoryRepository)
         {
             _blogPostRepository = blogPostRepository;
+            this._categoryRepository = categoryRepository;
         }
         [HttpPost]
         public async Task<IActionResult> CreateBlogPost([FromBody]CreateBlogPostRequestDto request)
@@ -30,8 +33,18 @@ namespace CodeAPI.Controllers
                 PublishedDate = request.PublishedDate,
                 Author = request.Author,
                 IsPublished = request.IsVisible,
+                Categories = new List<Category>()
             };
-            await _blogPostRepository.CreateAsync(blogPost);
+            foreach (var categoryGuid in request.Categories)
+            {
+                var existingCategory = await _categoryRepository.FindByIdAsync(categoryGuid);
+                if (existingCategory != null)
+                {
+                    blogPost.Categories.Add(existingCategory);
+                }
+            }
+
+            blogPost = await _blogPostRepository.CreateAsync(blogPost);
 
             //convert domain model to dto
             var reponse = new BlogPostDto
@@ -44,6 +57,12 @@ namespace CodeAPI.Controllers
                 PublishedDate = blogPost.PublishedDate,
                 Author = blogPost.Author,
                 IsVisible = blogPost.IsPublished,
+                Categories = blogPost.Categories.Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlHandle= x.UrlHandle,
+                }).ToList(),
             };
             return Ok();
         }
@@ -61,11 +80,18 @@ namespace CodeAPI.Controllers
                     Id = blogPost.Id,
                     Title = blogPost.Title,
                     Content = blogPost.Content,
+                    ShortDescription = blogPost.ShortDescription,
                     FeaturedImageUrl = blogPost.FeaturedImageUrl,
                     UrlHandle = blogPost.UrlHandle,
                     PublishedDate = blogPost.PublishedDate,
                     Author = blogPost.Author,
                     IsVisible = blogPost.IsPublished,
+                    Categories = blogPost.Categories.Select(c => new CategoryDto
+                    {
+                        Id= c.Id,
+                        Name = c.Name,
+                        UrlHandle= c.UrlHandle,
+                    }).ToList()
                 });
             }
             return Ok(response);

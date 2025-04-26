@@ -21,7 +21,7 @@ namespace CodeAPI.Repositories.Implementation
 
         public async Task<IEnumerable<BlogPost>> GettAllAsync()
         {
-            return await _context.BlogPots.ToListAsync();
+            return await _context.BlogPots.Include(x => x.Categories).ToListAsync();
         }
     }
 }

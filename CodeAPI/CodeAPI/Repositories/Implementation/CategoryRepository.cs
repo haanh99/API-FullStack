@@ -15,7 +15,7 @@ namespace CodeAPI.Repositories.Implementation
             return category;
         }
 
-        public Task<Category> FindByIdAsync(Guid id)
+        public Task<Category?> FindByIdAsync(Guid id)
         {
             return dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }

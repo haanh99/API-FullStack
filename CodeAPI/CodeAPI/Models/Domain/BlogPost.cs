@@ -13,5 +13,7 @@
         public string Author { get; set; }
         public bool IsPublished { get; set; }
 
+        public ICollection<Category> Categories { get; set; }
+
     }
 }
