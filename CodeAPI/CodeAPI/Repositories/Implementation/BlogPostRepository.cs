@@ -19,9 +19,15 @@ namespace CodeAPI.Repositories.Implementation
             return blogPost;
         }
 
+       
         public async Task<IEnumerable<BlogPost>> GettAllAsync()
         {
             return await _context.BlogPots.Include(x => x.Categories).ToListAsync();
         }
+        public async Task<BlogPost?> GetByIdAsync(Guid id)
+        {
+           return await _context.BlogPots.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
     }
 }
