@@ -10,6 +10,7 @@ namespace CodeAPI.Repositories.Interface
         Task<Category?> FindByIdAsync(Guid id);
         Task<Category?> UpdateAsync(Category category);
         Task<Category?> DeleteCategory(Guid id);
+        
 
     }
 }

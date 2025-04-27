@@ -29,5 +29,22 @@ namespace CodeAPI.Repositories.Implementation
            return await _context.BlogPots.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
+        {
+           var existingBlogPost =  await _context.BlogPots.Include(x=> x.Categories)
+                .FirstOrDefaultAsync(x =>x.Id == blogPost.Id);
+            if (existingBlogPost == null)
+            {
+                return null;
+            }
+            // Update BlogPost
+            _context.Entry(existingBlogPost).CurrentValues.SetValues(blogPost);
+
+            //Update Category
+            existingBlogPost.Categories = blogPost.Categories;
+
+            await _context.SaveChangesAsync();
+            return blogPost;
+        }
     }
 }
