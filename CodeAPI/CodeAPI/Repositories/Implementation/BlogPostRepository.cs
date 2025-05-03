@@ -2,6 +2,7 @@
 using CodeAPI.Models.Domain;
 using CodeAPI.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace CodeAPI.Repositories.Implementation
 {
@@ -45,6 +46,18 @@ namespace CodeAPI.Repositories.Implementation
 
             await _context.SaveChangesAsync();
             return blogPost;
+        }
+
+        public async Task<BlogPost?> DeleteAsync(Guid id)
+        {
+            var existingBlogPost = await _context.BlogPots.FirstOrDefaultAsync(x => x.Id == id);
+            if (existingBlogPost != null)
+            {
+                _context.BlogPots.Remove(existingBlogPost);
+                await _context.SaveChangesAsync();
+                return existingBlogPost;
+            }
+            return null;
         }
     }
 }

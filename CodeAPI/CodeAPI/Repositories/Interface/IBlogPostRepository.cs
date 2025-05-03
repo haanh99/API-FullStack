@@ -8,5 +8,6 @@ namespace CodeAPI.Repositories.Interface
         Task<IEnumerable<BlogPost>> GettAllAsync();
         Task<BlogPost?> GetByIdAsync(Guid id);
         Task<BlogPost?> UpdateAsync(BlogPost blogPost);
+        Task<BlogPost?> DeleteAsync(Guid id);
     }
 }

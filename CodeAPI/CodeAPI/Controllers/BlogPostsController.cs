@@ -21,7 +21,7 @@ namespace CodeAPI.Controllers
             this._categoryRepository = categoryRepository;
         }
         [HttpPost]
-        public async Task<IActionResult> CreateBlogPost([FromBody]CreateBlogPostRequestDto request)
+        public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto request)
         {
             //convert DTO to Domain
             var blogPost = new BlogPost
@@ -62,7 +62,7 @@ namespace CodeAPI.Controllers
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    UrlHandle= x.UrlHandle,
+                    UrlHandle = x.UrlHandle,
                 }).ToList(),
             };
             return Ok();
@@ -89,9 +89,9 @@ namespace CodeAPI.Controllers
                     IsVisible = blogPost.IsPublished,
                     Categories = blogPost.Categories.Select(c => new CategoryDto
                     {
-                        Id= c.Id,
+                        Id = c.Id,
                         Name = c.Name,
-                        UrlHandle= c.UrlHandle,
+                        UrlHandle = c.UrlHandle,
                     }).ToList()
                 });
             }
@@ -100,10 +100,10 @@ namespace CodeAPI.Controllers
         //GET {apiBaseUrl}/api/blogposts/{id}
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<IActionResult> GetBlogPostById([FromRoute]Guid id)
+        public async Task<IActionResult> GetBlogPostById([FromRoute] Guid id)
         {
             //get blogpost from repo
-           var blogPost = await _blogPostRepository.GetByIdAsync(id);
+            var blogPost = await _blogPostRepository.GetByIdAsync(id);
             if (blogPost == null)
             {
                 return NotFound();
@@ -158,7 +158,7 @@ namespace CodeAPI.Controllers
                 }
             }
             // call repository to update BlogPost Domain Model
-           var updatedBlogPost = await _blogPostRepository.UpdateAsync(blogpost);
+            var updatedBlogPost = await _blogPostRepository.UpdateAsync(blogpost);
             if (updatedBlogPost != null)
             {
                 var response = new BlogPostDto
@@ -182,6 +182,32 @@ namespace CodeAPI.Controllers
                 return Ok(response);
             }
             return NotFound();
+        }
+        // DELETE: {apibaseurl/api/blogposts/{id}}
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
+        {
+            var deletedBlogPost = await _blogPostRepository.DeleteAsync(id);
+            if(deletedBlogPost == null)
+            {
+                return NotFound();
+            }
+            //Convert Domain to DTO
+            var response = new BlogPostDto
+            {
+                Id = deletedBlogPost.Id,
+                Title = deletedBlogPost.Title,
+                ShortDescription = deletedBlogPost.ShortDescription,
+                Content = deletedBlogPost.Content,
+                FeaturedImageUrl = deletedBlogPost.FeaturedImageUrl,
+                UrlHandle = deletedBlogPost.UrlHandle,
+                PublishedDate = deletedBlogPost.PublishedDate,
+                Author = deletedBlogPost.Author,
+                IsVisible = deletedBlogPost.IsPublished,
+
+            };
+            return Ok(response);
         }
     }
 }
