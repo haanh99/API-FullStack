@@ -61,6 +61,27 @@ namespace CodeAPI.Controllers
                 ModelState.AddModelError("file", "File size cannot be more than 10MB");
             }
         }
+        //Get {apibaseURL}api/Images
+        [HttpGet]
+        public async Task<IActionResult> GetAllImages()
+        {
+            var images = await imageRepository.GetAll();
 
+            //Convert Domaim model to DTO
+            var response = new List<BlogImageDto>();
+            foreach (var image in images)
+            {
+                response.Add(new BlogImageDto
+                {
+                    Id = image.Id,
+                    Title = image.Title,
+                    DateCreated = image.DateCreated,
+                    FileExtension = image.FileExtension,
+                    FileName = image.FileName,
+                    Url = image.Url
+                });
+            }
+            return Ok(response);
+        }
     }
 }

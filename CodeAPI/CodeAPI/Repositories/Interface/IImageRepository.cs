@@ -5,5 +5,6 @@ namespace CodeAPI.Repositories.Interface
     public interface IImageRepository
     {
          Task<BlogImage> Upload(IFormFile file, BlogImage image);
+         Task<IEnumerable<BlogImage>> GetAll();
     }
 }

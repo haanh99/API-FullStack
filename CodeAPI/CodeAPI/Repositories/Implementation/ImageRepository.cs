@@ -1,6 +1,7 @@
 ﻿using CodeAPI.Data;
 using CodeAPI.Models.Domain;
 using CodeAPI.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CodeAPI.Repositories.Implementation
@@ -16,6 +17,13 @@ namespace CodeAPI.Repositories.Implementation
             _httpContextAccessor = httpContextAccessor;
             this._applicationDbContext = dbContext;
         }
+
+        public async Task<IEnumerable<BlogImage>> GetAll()
+        {
+           var listImage =  await _applicationDbContext.BlogImages.ToListAsync();
+            return listImage;
+        }
+
         public async Task<BlogImage> Upload(IFormFile file, BlogImage blogImage)
         {
 
