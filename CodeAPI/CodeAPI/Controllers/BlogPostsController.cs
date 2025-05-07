@@ -226,13 +226,13 @@ namespace CodeAPI.Controllers
             {
                 Id = blogPost.Id,
                 Title = blogPost.Title,
+                FeaturedImageUrl= blogPost.FeaturedImageUrl,
                 ShortDescription = blogPost.ShortDescription,
                 Content = blogPost.Content,
                 UrlHandle = blogPost.UrlHandle,
                 IsVisible = blogPost.IsPublished,
                 PublishedDate = blogPost.PublishedDate,
-                Author = blogPost.Author,
-                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                Author = blogPost.Author, 
                 Categories = new List<CategoryDto>()
 
             };
