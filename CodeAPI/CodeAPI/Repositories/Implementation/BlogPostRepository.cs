@@ -59,5 +59,11 @@ namespace CodeAPI.Repositories.Implementation
             }
             return null;
         }
+
+        public async Task<BlogPost?> GetByUrlHandleAsync(string urlHandle)
+        {
+           var existingBlogPost = await _context.BlogPots.FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);
+           return existingBlogPost;
+        }
     }
 }

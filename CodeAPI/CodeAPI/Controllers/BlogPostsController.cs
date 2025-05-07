@@ -209,5 +209,43 @@ namespace CodeAPI.Controllers
             };
             return Ok(response);
         }
+
+        //GET: {APIbaseUrl}/api/blogPosts/{urlhandle}
+        [HttpGet]
+        [Route("{urlHandle}")]
+        public async Task<IActionResult> GetBlogPostByUrlHandle([FromRoute] string urlHandle)
+        {
+            var blogPost = await _blogPostRepository.GetByUrlHandleAsync(urlHandle);
+
+            //convert to DTO
+            if (blogPost == null)
+            {
+                return NotFound();
+            }
+            var response = new BlogPostDto
+            {
+                Id = blogPost.Id,
+                Title = blogPost.Title,
+                ShortDescription = blogPost.ShortDescription,
+                Content = blogPost.Content,
+                UrlHandle = blogPost.UrlHandle,
+                IsVisible = blogPost.IsPublished,
+                PublishedDate = blogPost.PublishedDate,
+                Author = blogPost.Author,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                Categories = new List<CategoryDto>()
+
+            };
+            if (blogPost.Categories != null)
+            {
+                response.Categories = blogPost.Categories.Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlHandle = x.UrlHandle,
+                }).ToList();
+            }
+             return Ok(response);
+        }
     }
 }
