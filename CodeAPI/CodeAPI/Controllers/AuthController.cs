@@ -18,7 +18,7 @@ namespace CodeAPI.Controllers
         //POST: {apibaseUrl}/api/auth/register
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterRequestDto request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
         {
             //Create Identity object
             var user = new IdentityUser
@@ -59,6 +59,35 @@ namespace CodeAPI.Controllers
                     }
                 }
             }
+            return ValidationProblem(ModelState);
+        }
+
+        //POST: {apibaseUrl}/api/auth/login
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        {
+            // CHECK USER EXIT EMAIL
+            var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            if (identityUser != null)
+            {
+                //Check Password
+                var chekingPassWord = await _userManager.CheckPasswordAsync(identityUser, request.Password);
+
+                if (chekingPassWord)
+                {
+                    var roles = await _userManager.GetRolesAsync(identityUser);
+                    //Create a Token and Response
+                    var response = new LoginResponseDto
+                    {
+                        Email = request.Email,
+                        Roles = roles.ToList(),
+                        Token = "TOKEN"
+                    };
+                    return Ok(response);
+                }
+            }
+            ModelState.AddModelError("", "Email or Password Incorrect");
             return ValidationProblem(ModelState);
         }
     }
