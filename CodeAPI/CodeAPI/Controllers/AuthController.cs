@@ -1,4 +1,5 @@
 ﻿using CodeAPI.Models.DTO;
+using CodeAPI.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,13 @@ namespace CodeAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ITokenRepository _tokenRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(UserManager<IdentityUser> userManager,
+            ITokenRepository tokenRepository)
         {
             this._userManager = userManager;
+            this._tokenRepository = tokenRepository;
         }
         //POST: {apibaseUrl}/api/auth/register
         [HttpPost]
@@ -78,11 +82,12 @@ namespace CodeAPI.Controllers
                 {
                     var roles = await _userManager.GetRolesAsync(identityUser);
                     //Create a Token and Response
+                    var jwtToken = _tokenRepository.CreateJwtToken(identityUser, roles.ToList());
                     var response = new LoginResponseDto
                     {
                         Email = request.Email,
                         Roles = roles.ToList(),
-                        Token = "TOKEN"
+                        Token = jwtToken,
                     };
                     return Ok(response);
                 }

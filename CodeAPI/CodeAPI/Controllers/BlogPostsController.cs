@@ -3,6 +3,7 @@ using CodeAPI.Data;
 using CodeAPI.Models.Domain;
 using CodeAPI.Models.DTO;
 using CodeAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace CodeAPI.Controllers
             this._categoryRepository = categoryRepository;
         }
         [HttpPost]
+        [Authorize(Roles ="Writer")]
         public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto request)
         {
             //convert DTO to Domain
@@ -132,6 +134,7 @@ namespace CodeAPI.Controllers
         //edit category
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> UpdateBlogPostById([FromRoute] Guid id, UpdateBlogPostRequestDto request)
         {
             //Convert DTO to domain model
@@ -186,6 +189,7 @@ namespace CodeAPI.Controllers
         // DELETE: {apibaseurl/api/blogposts/{id}}
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
         {
             var deletedBlogPost = await _blogPostRepository.DeleteAsync(id);

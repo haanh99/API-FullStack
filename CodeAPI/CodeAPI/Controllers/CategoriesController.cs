@@ -2,6 +2,7 @@
 using CodeAPI.Models.Domain;
 using CodeAPI.Models.DTO;
 using CodeAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace CodeAPI.Controllers
             this._categoryRepository = categoryRepository;
         }
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
         {
             //Map DTO to Domain Model
@@ -80,6 +82,7 @@ namespace CodeAPI.Controllers
         // update category by Id
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
         {
             //convert Dto to domain model
@@ -108,6 +111,7 @@ namespace CodeAPI.Controllers
         // Delete category
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {
             var category = await _categoryRepository.DeleteCategory(id);
