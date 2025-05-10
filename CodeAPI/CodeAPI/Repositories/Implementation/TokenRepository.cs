@@ -21,9 +21,9 @@ namespace CodeAPI.Repositories.Implementation
             // Create Claims
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Email, user.Email)
             };
-            claims.AddRange(roles.Select(role =>new Claim(ClaimTypes.Name, role)));
+            claims.AddRange(roles.Select(role =>new Claim(ClaimTypes.Role, role)));
 
             //JWT Security Token Parameters
 

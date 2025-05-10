@@ -19,7 +19,7 @@ namespace CodeAPI.Controllers
             this._categoryRepository = categoryRepository;
         }
         [HttpPost]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
         {
             //Map DTO to Domain Model
@@ -35,17 +35,18 @@ namespace CodeAPI.Controllers
             var response = new CategoryDto
             {
                 Id = category.Id,
-                Name = request.Name,
-                UrlHandle = request.UrlHandle,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle,
             };
             return Ok(response);
         }
 
-        //GET /api/categories
+        //GET /api/categories?query=html
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        
+        public async Task<IActionResult> GetAllCategories([FromQuery] string? query)
         {
-           var categories =  await _categoryRepository.GetAllAsync();
+           var categories =  await _categoryRepository.GetAllAsync(query);
 
             var response = new List<CategoryDto>();
            

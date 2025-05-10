@@ -20,9 +20,24 @@ namespace CodeAPI.Repositories.Implementation
             return dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null)
         {
-            return await dbContext.Categories.ToListAsync();
+            //Query
+            var categories = dbContext.Categories.AsQueryable();
+
+            //Filtering
+            if (!string.IsNullOrWhiteSpace(query)) 
+            {
+                categories = categories.Where(c => c.Name.Contains(query));
+            }
+            //Sorting
+
+            //Pagination
+
+            //Return a list
+            return await categories.AsNoTracking().ToListAsync();
+            //Same as before, just split into two things
+            //return await dbContext.Categories.ToListAsync();
         }
 
         public async Task<Category?> UpdateAsync(Category category)

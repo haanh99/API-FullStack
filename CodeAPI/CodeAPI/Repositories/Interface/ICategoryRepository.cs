@@ -6,7 +6,7 @@ namespace CodeAPI.Repositories.Interface
     {
         Task<Category> CreateAsync(Category category);
 
-        Task<IEnumerable<Category>> GetAllAsync();
+        Task<IEnumerable<Category>> GetAllAsync(string? query = null);
         Task<Category?> FindByIdAsync(Guid id);
         Task<Category?> UpdateAsync(Category category);
         Task<Category?> DeleteCategory(Guid id);
