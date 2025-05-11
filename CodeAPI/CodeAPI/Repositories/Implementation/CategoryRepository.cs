@@ -20,7 +20,7 @@ namespace CodeAPI.Repositories.Implementation
             return dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null)
+        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null, string? sortBy =null, string? sortDirection = null)
         {
             //Query
             var categories = dbContext.Categories.AsQueryable();
@@ -31,6 +31,21 @@ namespace CodeAPI.Repositories.Implementation
                 categories = categories.Where(c => c.Name.Contains(query));
             }
             //Sorting
+            if(string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (string.Equals(sortBy, "Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    var isAsc = string.Equals(sortDirection,"asc", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                    categories = isAsc ? categories.OrderBy(c => c.Name) : categories.OrderByDescending(c => c.Name);
+                }
+                if (string.Equals(sortBy, "URL", StringComparison.OrdinalIgnoreCase))
+                {
+                    var isAsc = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                    categories = isAsc ? categories.OrderBy(c => c.UrlHandle) : categories.OrderByDescending(c => c.UrlHandle);
+                }
+            }
 
             //Pagination
 

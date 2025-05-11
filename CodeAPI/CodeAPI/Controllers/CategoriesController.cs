@@ -41,12 +41,13 @@ namespace CodeAPI.Controllers
             return Ok(response);
         }
 
-        //GET /api/categories?query=html
+        //GET /api/categories?query=html&sortBy=name&sortDirection=desc
         [HttpGet]
         
-        public async Task<IActionResult> GetAllCategories([FromQuery] string? query)
+        public async Task<IActionResult> GetAllCategories([FromQuery] string? query, [FromQuery] string? sortBy,
+            [FromQuery] string? sortDirection)
         {
-           var categories =  await _categoryRepository.GetAllAsync(query);
+           var categories =  await _categoryRepository.GetAllAsync(query,sortBy, sortDirection);
 
             var response = new List<CategoryDto>();
            
