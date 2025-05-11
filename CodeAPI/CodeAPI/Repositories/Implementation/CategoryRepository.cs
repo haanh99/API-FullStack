@@ -20,7 +20,11 @@ namespace CodeAPI.Repositories.Implementation
             return dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null, string? sortBy =null, string? sortDirection = null)
+        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null,
+            string? sortBy =null,
+            string? sortDirection = null,
+            int? pageNumber = 1,
+            int? pageSize = 100)
         {
             //Query
             var categories = dbContext.Categories.AsQueryable();
@@ -48,7 +52,10 @@ namespace CodeAPI.Repositories.Implementation
             }
 
             //Pagination
-
+            //Page 1 pagesize 5 -skip0 , tanke 5.
+            //Page 2 pagesize 5 -skip5, take5
+            var skipResult = (pageNumber - 1) * pageSize;
+            categories = categories.Skip(skipResult ?? 0).Take(pageSize ?? 100);
             //Return a list
             return await categories.AsNoTracking().ToListAsync();
             //Same as before, just split into two things

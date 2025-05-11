@@ -44,10 +44,14 @@ namespace CodeAPI.Controllers
         //GET /api/categories?query=html&sortBy=name&sortDirection=desc
         [HttpGet]
         
-        public async Task<IActionResult> GetAllCategories([FromQuery] string? query, [FromQuery] string? sortBy,
-            [FromQuery] string? sortDirection)
+        public async Task<IActionResult> GetAllCategories(
+            [FromQuery] string? query,
+            [FromQuery] string? sortBy,
+            [FromQuery] string? sortDirection,
+            [FromQuery] int? pageNumber,
+            [FromQuery] int? pageSize)
         {
-           var categories =  await _categoryRepository.GetAllAsync(query,sortBy, sortDirection);
+           var categories =  await _categoryRepository.GetAllAsync(query,sortBy, sortDirection, pageNumber,pageSize);
 
             var response = new List<CategoryDto>();
            
