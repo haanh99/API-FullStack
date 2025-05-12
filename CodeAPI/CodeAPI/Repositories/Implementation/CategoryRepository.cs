@@ -86,6 +86,9 @@ namespace CodeAPI.Repositories.Implementation
             return selectedCategory;
         }
 
-     
+        public async Task<int> GetCount()
+        {
+           return  await dbContext.Categories.CountAsync();
+        }
     }
 }

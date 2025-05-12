@@ -137,6 +137,15 @@ namespace CodeAPI.Controllers
             return Ok(response);
 
         }
+        // Get : https://localhost:xxxx/api/categories/count
+        [HttpGet]
+        [Route("count")]
+        //[Authorize(Roles ="Writer")]
+        public async Task<IActionResult> GetCategoriesTotal()
+        {
+            var count = await _categoryRepository.GetCount();
+            return Ok(count);
+        }
         
     }
 }
